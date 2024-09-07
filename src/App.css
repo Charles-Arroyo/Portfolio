@@ -1,38 +1,315 @@
 .App {
   text-align: center;
+  background-color: #282c34; /* Dark grey/blue background */
+  min-height: 100vh;         /* Ensures it covers the full viewport height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.batterybar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  font-size: 30px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.search input {
+  width: 300px;
+  padding: 0.5rem;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.search input:focus {
+  border-color: #007bff; /* Change focus color */
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.time {
+  color: black;
+  font-size: 10px;
+  padding-top: 1px;
+  padding-left: 3px;
+  font-weight: bold;
+}
+
+.left-align {
+  float: left;
+}
+
+.story {
+  flex: 0 0 auto;
+  width: 80px; /* Smaller width */
+  height: 110px; /* Smaller height */
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  scroll-snap-align: start;
+}
+
+.story img {
+  width: 70px; /* Smaller image */
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.story p {
+  text-align: center;
+  margin-top: 5px;
+  font-size: 0.8rem; /* Smaller text */
+}
+
+.stories-container {
+  display: flex;
+  overflow-x: auto;           /* Horizontal scroll for stories */
+  white-space: nowrap;
+  padding: 10px;
+  scroll-snap-type: x mandatory;
+  gap: 15px;                  /* Adjusted spacing between stories */
+  height: 200px;  
+ 
+}
+
+.fyp-card {
+  position: relative;
+  width: 100%;         /* The card takes up full width of the grid item */
+  height: 200px;       /* Fixed height for all cards */
+  border-radius: 10px;
+  overflow: hidden;    /* Ensures no content overflows */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f5f5; /* Optional background for cards */
+}
+
+.fyp-image {
+  width: 100%;        /* Make the image fill the width of the card */
+  height: 150px;      /* Fixed height for all images */
+  object-fit: cover;  /* Cover the card without distorting the image */
+  border-bottom: 1px solid #ccc; /* Optional: Add a border to separate the image and text */
+}
+
+.fyp-title {
+  padding: 10px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.fyp-container {
+  flex-grow: 1;               /* Fills the remaining space */
+  padding: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive grid */
+  gap: 15px;
+  overflow-y: auto;           /* Enables vertical scrolling */
+}
+
+.phone {
+  background-color: #c8ceda;  /* Light grey color for the phone */
+  width: 400px;               /* Adjust width to represent phone */
+  height: 800px;              /* Adjust height to represent phone */
+  border-radius: 20px;        /* Rounded corners like a phone */
+  border: 2px solid #000;     /* Optional: Add a black border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.9); /* Add a subtle shadow */
+  overflow: hidden;           /* Ensures no content goes outside */
+  display: flex;
+  flex-direction: column;     /* Stacks children vertically */
+  overflow: hidden;           /* Ensures no content goes outside */
+  position: relative;         /* Make this relative so absolute elements stay inside */
+}
+
+.phoneContent {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;               /* Takes up remaining space after battery bar and navbar */
+  overflow-y: auto;           /* Allows scrolling if content exceeds */
+}
+
+
+
+
+/* Overlay styles */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it overlays other content */
+}
+
+.overlay-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 300px;
+  height: 200px;
+  position: relative;
+}
+
+button {
+  padding: 10px 20px;
+  margin-top: 20px;
+  border: none;
+  background-color: #007bff;
   color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #0056b3;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.logo-container {
+  cursor: pointer; /* Make the logo clickable */
 }
+
+.camera-icon {
+  position: absolute;
+  bottom: 20px;  /* Distance from the bottom of the phone */
+  left: 20px;    /* Distance from the left side of the phone */
+  width: 70px;   /* Adjust icon size */
+  height: 70px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Ensures it's above other elements */
+}
+
+.camera-icon img {
+  width: 50px; /* Adjust size of the icon itself */
+  height: 50px;
+  object-fit: cover;
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* Sliding screen styles */
+.sliding-screen {
+  position: absolute;
+  top: 0;
+  left: -100%; /* Start off-screen */
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 20;
+  transition: left 0.5s ease-in-out; /* Animate the sliding */
+}
+
+.sliding-screen.visible {
+  left: 0; /* Slide in from the left */
+}
+
+.chat-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #ccc;
+}
+
+.message-list {
+  flex-grow: 1; /* Make it take up available space */
+  padding: 20px;
+  overflow-y: auto; /* Allows scrolling for long message history */
+  background-color: #f5f5f5;
+  text-align: left; /* Make sure all messages are aligned to the left */
+
+}
+
+/* Chat input area */
+.chat-input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+  background-color: white;
+}
+
+.chat-input input {
+  flex-grow: 1; /* Allow the input to expand */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-right: 10px;
+  outline: none;
+}
+
+.chat-input button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.chat-input button:hover {
+  background-color: #0056b3;
+}
+
+/* Basic container for messages */
+.message-container {
+  margin-bottom: 15px;
+}
+
+/* Label above messages for 'Charles' and 'You' */
+.message-label {
+  font-weight: bold;
+  font-size: 12px;
+  margin-bottom: 3px;
+}
+
+/* Styling for user messages */
+.user-message {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: left; /* Align all messages to the left */
+  max-width: 70%;
+  margin-right: auto; /* Align to the left */
+  display: inline-block;
+}
+
+/* Styling for system messages */
+.system-message {
+  background-color: #f8d7da;
+  color: #842029;
+  padding: 10px;
+  border-radius: 10px;
+  text-align: left;
+  max-width: 70%;
+  margin-right: auto; /* Align to the left */
+  display: inline-block;
+}
+
+
