@@ -249,16 +249,7 @@ function App() {
     }
   };
 
-  const updateArrowPosition = () => {
-    if (divRef.current) {
-      const rect = divRef.current.getBoundingClientRect(); // Get the div's position
-      // Set the arrow position based on the div's position
-      setArrowPosition({
-        top: rect.top + window.scrollY + rect.height / 2, // Vertically align to the middle of the div
-        left: rect.left + window.scrollX - 40, // Adjust left position to the left of the div
-      });
-    }
-  };
+
 
   const handleStoryClick = (story) => {
     // You can log the story ID to the console or perform any action
@@ -286,13 +277,6 @@ function App() {
       setMessages([{ text: "Hello! My name is Charles, I am Software Engineer at Iowa State. Type in the chat a message you would like to send to me, and it will be forwarded to my email.", type: 'system' }]);
     }
   }, [isScreenVisible]);
-
-  useEffect(() => {
-    updateArrowPosition();
-    window.addEventListener("resize", updateArrowPosition); // Update position on window resize
-
-    return () => window.removeEventListener("resize", updateArrowPosition); // Clean up listener
-  }, []);
 
   return (
 
