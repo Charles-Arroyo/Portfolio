@@ -1,10 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import logo from "./bit.svg";
 import chat from "./chat.svg";
 import axios from 'axios';  // Import axios for making API requests
 import coup from "./assets/images/coup.png"; // Import the image
+import coupLanding from "./assets/images/LandingPage.png"; // Import the image
+import github from "./assets/images/github 1.png";
+import me from "./assets/images/YoungMe.png";
+import google from "./assets/videos/google.mp4";
 import vetaid from "./assets/images/vetaid.png"; // Import the image
+import irobot from "./assets/images/irobot.png"; // Import the image
+import coupvid from "./assets/videos/coupvid.mp4"; // Import the image
+import test from "./assets/images/test.svg"; // Import the image
+import grad from "./assets/images/grad.jpg"; // Import the image
+
+
+
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 
@@ -15,58 +26,71 @@ function App() {
   const [messages, setMessages] = useState([]); // State to store chat messages
   const [newMessage, setNewMessage] = useState(''); // State for input field
   const [isFirstMessage, setIsFirstMessage] = useState(true); // State to track first message
+  const [selectedStory, setSelectedStory] = useState(null); // State for the clicked story
+  const [isStoryVisible, setIsStoryVisible] = useState(false); // State for showing full-screen story
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to track the current image in a story
+  const [searchQuery, setSearchQuery] = useState(''); // State to track the search input
+  const divRef = useRef(null); // Create a ref to the div
+  const [arrowPosition, setArrowPosition] = useState({ top: 0, left: 0 }); // State to store arrow position
+
+
+  
+
+
 
   const stories = [
-    { id: 1, title: "Story 1", imageUrl: coup },
-    { id: 2, title: "Story 2", imageUrl: "https://via.placeholder.com/100" },
-    { id: 3, title: "Story 3", imageUrl: "https://via.placeholder.com/100" },
-    { id: 4, title: "Story 4", imageUrl: "https://via.placeholder.com/100" },
-    { id: 5, title: "Story 5", imageUrl: "https://via.placeholder.com/100" },
+    { id: 1, title: "My Story", images: [me, grad] },
+    { id: 2, title: "Git Hub", images: [github] },
+    { id: 3, title: "Collins", images: ["https://via.placeholder.com/100", "https://via.placeholder.com/500"] },
+    { id: 4, title: "Coming Soon..", images: ["https://via.placeholder.com/100", "https://via.placeholder.com/500"] },
+    { id: 5, title: "Coming Soon..", images: ["https://via.placeholder.com/100", "https://via.placeholder.com/500"] }
+
   ];
+  
 
   const fypPosts = [
     {
       id: 1,
-      title: "Coup Mobile",
-      imageUrl: coup
+      title: "Google Clone",
+      type: "video", // Specifies this is a video
+      mediaUrl: google,
     },
     {
       id: 2,
       title: "VetAid",
-      imageUrl: vetaid,
+      type: "image", // Specifies this is a video
+      mediaUrl: vetaid,
     },
     {
       id: 3,
-      title: "Amazing Fireworks",
-      imageUrl: "https://via.placeholder.com/200x300",
+      title: "iRobot",
+      type: "image", // Specifies this is an image
+      mediaUrl: irobot,
     },
     {
       id: 4,
-      title: "Sunset Vibe",
-      imageUrl: "https://via.placeholder.com/200x300",
+      title: "Coup Mobile",
+      type: "video", // Specifies this is an image
+      mediaUrl: coupvid, // Example image URL
     },
     {
       id: 5,
       title: "Coming Soon...",
-      imageUrl: "https://via.placeholder.com/200x300",
+      type: "image", // Specifies this is a video
+      mediaUrl: test,
     },
     {
       id: 6,
-      title: "Coming Soon...",
-      imageUrl: "https://via.placeholder.com/200x300",
+      title: "Coup Landing Page",
+      type: "image", // Specifies this is a video
+      mediaUrl: coupLanding,
     },
     {
       id: 7,
       title: "Coming Soon...",
-      imageUrl: "https://via.placeholder.com/200x300",
+      type: "video", // Specifies this is a video
+      mediaUrl: google,
     },
-    {
-      id: 7,
-      title: "Coming Soon...",
-      imageUrl: "https://via.placeholder.com/200x300",
-    },
-
-    // Add more posts as needed
   ];
 
   useEffect(() => {
@@ -79,8 +103,6 @@ function App() {
       hours = hours ? hours : 12; // the hour '0' should be '12'
       setCurrentTime(`${hours}:${minutes} ${ampm}`);
     };
-
-    
 
     
 
@@ -111,11 +133,15 @@ function App() {
   const toggleScreen = () => {
     setIsScreenVisible(!isScreenVisible);
   };
+  const filteredStories = stories.filter(story =>
+    story.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
 
   const personalInfo = {
     "name": "My name is Charles and I live in Ames, Iowa.",
     "location": "I live in Ames, Iowa.",
-    "food": "My favorite thing to eat is sushi.",
+    "eat": "My favorite thing to eat is sushi.",
     "fun": "I enjoy working out and playing video games.",
     "music": "Bob Dylan, Classic Rock, ANYTHING",
     "java": [
@@ -136,7 +162,7 @@ function App() {
       return personalInfo["name"];
     } else if (lowerCaseMessage.includes("location") || lowerCaseMessage.includes("live")) {
       return personalInfo["location"];
-    } else if (lowerCaseMessage.includes("food") || lowerCaseMessage.includes("favorite food")) {
+    } else if (lowerCaseMessage.includes("eat") || lowerCaseMessage.includes("favorite food")) {
       return personalInfo["food"];
     } else if (lowerCaseMessage.includes("fun") || lowerCaseMessage.includes("like to do")) {
       return personalInfo["fun"];    
@@ -158,6 +184,11 @@ function App() {
   const getAIResponse = async (userMessage) => {
     const context = determineContext(userMessage); // Choose context based on user message
 
+
+    const filteredFypPosts = fypPosts.filter(post =>
+      post.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    
     try {
       console.log('Sending question to AI:', userMessage); // Debugging
 
@@ -228,17 +259,67 @@ function App() {
     }
   };
 
+  const updateArrowPosition = () => {
+    if (divRef.current) {
+      const rect = divRef.current.getBoundingClientRect(); // Get the div's position
+      // Set the arrow position based on the div's position
+      setArrowPosition({
+        top: rect.top + window.scrollY + rect.height / 2, // Vertically align to the middle of the div
+        left: rect.left + window.scrollX - 40, // Adjust left position to the left of the div
+      });
+    }
+  };
+
+  const handleStoryClick = (story) => {
+    // You can log the story ID to the console or perform any action
+    console.log(`Story with ID ${story} clicked!`);
+    setSelectedStory(story); // Set the clicked story as the selected one
+    setIsStoryVisible(true); // Show the story in full screen
+    setCurrentImageIndex(0);
+  };
+
+  const closeStory = () => {
+    setIsStoryVisible(false); // Hide the full-screen story
+  };
+    const getDivLocation = () => {
+    if (divRef.current) {
+      const rect = divRef.current.getBoundingClientRect(); // Get the div's position
+      console.log('Div Location:', rect);
+      alert(`Div Location:\nTop: ${rect.top}\nLeft: ${rect.left}\nRight: ${rect.right}\nBottom: ${rect.bottom}`);
+    }
+  };
+
+  const handleImageClick = () => {
+    if (currentImageIndex < selectedStory.images.length - 1) {
+      setCurrentImageIndex(currentImageIndex + 1); // Move to the next image
+    } else {
+      setCurrentImageIndex(0); // If it's the last image, loop back to the first image
+    }
+  };
+
   useEffect(() => {
     if (isScreenVisible && messages.length === 0) {
       setMessages([{ text: "Hello! My name is Charles, I am Software Engineer at Iowa State. Type in the chat a message you would like to send to me, and it will be forwarded to my email.", type: 'system' }]);
     }
   }, [isScreenVisible]);
 
+  useEffect(() => {
+    updateArrowPosition();
+    window.addEventListener("resize", updateArrowPosition); // Update position on window resize
+
+    return () => window.removeEventListener("resize", updateArrowPosition); // Clean up listener
+  }, []);
+
   return (
-<div className="App">
-  
+
+    
+<div className="App">  
   <div className="phone">
+ 
+     {/* Conditionally render the selected story's image */}
+     
     <div className="phoneContent">
+      
       <nav className="batterybar">
         <div className="time">{currentTime}</div>
       </nav>
@@ -247,39 +328,96 @@ function App() {
               <img className="logo" src={logo} alt="Logo" />
       </div>
         <div className="search">
-          <input type="text" placeholder="Search..." />
+              <input 
+        type="text" 
+        placeholder="Search Stories..." 
+        value={searchQuery} 
+        onChange={(e) => setSearchQuery(e.target.value)} 
+      />
         </div>
       </nav>
       
-      <div className="stories-container">
-        {stories.map((story) => (
-          <div key={story.id} className="story">
-            <img src={story.imageUrl} alt={story.title} />
+          <div className="stories-container" ref={divRef}>
+      {filteredStories.length > 0 ? (
+        filteredStories.map((story) => (
+          <div key={story.id} className="story" onClick={() => handleStoryClick(story)}>
+            <img src={story.images[0]} alt={story.title} /> {/* Show the first image in the story */}
             <p>{story.title}</p>
           </div>
-        ))}
-      </div>
-    </div>
-    <div className="fyp-container">
-      {fypPosts.map((post) => (
-        <div key={post.id} className="fyp-card">
-          <img src={post.imageUrl} alt={post.title} className="fyp-image" />
-          <p className="fyp-title">{post.title}</p>
-        </div>
-      ))}
+        ))
+      ) : (
+        <p>No stories found</p>
+      )}
     </div>
 
-    <div className="camera-icon" onClick={toggleScreen}>
+
+      {/* Full-Screen Story Modal */}
+      {isStoryVisible && selectedStory && (
+        <div className="full-screen-story">
+          <div className="story-content">
+            <button className="close-btn" onClick={closeStory}>Close</button>
+
+            {/* Story Title */}
+            <h2>{selectedStory.title}</h2>
+
+            {/* Clickable image for changing to the next image */}
+            <img
+              src={selectedStory.images[currentImageIndex]}
+              alt={`${selectedStory.title} - ${currentImageIndex + 1}`}
+              className="story-image"
+              onClick={handleImageClick} // Click image to move to the next one
+            />
+
+            {/* Image navigation indicator */}
+            <p>
+              {currentImageIndex + 1} / {selectedStory.images.length}
+            </p>
+          </div>
+        </div>
+      )}
+
+     
+      
+
+    </div>
+  <div className="fyp-container">
+  {fypPosts.map((post) => (
+    <div key={post.id} className="fyp-card">
+      {post.type === "video" ? (
+        <video
+          src={post.mediaUrl}
+          className="fyp-video"
+          controls
+          loop
+          muted
+          
+        >
+          Your browser does not support the video tag.
+        </video>
+      ) : (
+        <img
+          src={post.mediaUrl}
+          alt={post.title}
+          className="fyp-image"
+        />
+      )}
+      <p className="fyp-title">{post.title}</p>
+    </div>
+  ))}
+
+
+<div className="camera-icon" onClick={toggleScreen}>
           <img src={chat} alt="Camera" />
         </div>
         <div className={`sliding-screen ${isScreenVisible ? 'visible' : ''}`}>
           <div className="sliding-content">
             <div>
-              
             </div>
             <button onClick={toggleScreen}>Close</button>
           </div>
         </div>
+
+</div>
         
         
         {/* Sliding chat screen */}
@@ -317,23 +455,18 @@ function App() {
         {isOverlayVisible && (
   <div className="overlay">
     <div className="overlay-content">
-      <h1>👋 My Name is Charles</h1>
-
+      <h1>👋</h1>
       {/* Link to download or view the Overleaf resume */}
       <div>
-        <a href="https://your-overleaf-resume-url.pdf" target="_blank" rel="noopener noreferrer">
-          View My Resume
-        </a>
+      <a href="/Charles_Arroyo_Resume.pdf" download="Charles_Arroyo_Resume.pdf">
+        Download My Resume
+      </a>
       </div>
 
       <button onClick={toggleOverlay}>Close</button>
     </div>
   </div>
 )}
-
-
-        
-
 
   </div>
 </div>
