@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 import logo from "./bit.svg";
 import chat from "./chat.svg";
-import axios from 'axios';  // Import axios for making API requests
-import coup from "./assets/images/coup.png"; // Import the image
 import coupLanding from "./assets/images/LandingPage.png"; // Import the image
 import github from "./assets/images/github 1.png";
 import me from "./assets/images/YoungMe.png";
@@ -31,9 +29,6 @@ function App() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State to track the current image in a story
   const [searchQuery, setSearchQuery] = useState(''); // State to track the search input
   const divRef = useRef(null); // Create a ref to the div
-  const [arrowPosition, setArrowPosition] = useState({ top: 0, left: 0 }); // State to store arrow position
-
-
   
 
 
@@ -183,11 +178,6 @@ function App() {
   // Function to call Hugging Face RoBERTa model and get a response
   const getAIResponse = async (userMessage) => {
     const context = determineContext(userMessage); // Choose context based on user message
-
-
-    const filteredFypPosts = fypPosts.filter(post =>
-      post.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
     
     try {
       console.log('Sending question to AI:', userMessage); // Debugging
@@ -281,13 +271,7 @@ function App() {
   const closeStory = () => {
     setIsStoryVisible(false); // Hide the full-screen story
   };
-    const getDivLocation = () => {
-    if (divRef.current) {
-      const rect = divRef.current.getBoundingClientRect(); // Get the div's position
-      console.log('Div Location:', rect);
-      alert(`Div Location:\nTop: ${rect.top}\nLeft: ${rect.left}\nRight: ${rect.right}\nBottom: ${rect.bottom}`);
-    }
-  };
+
 
   const handleImageClick = () => {
     if (currentImageIndex < selectedStory.images.length - 1) {
