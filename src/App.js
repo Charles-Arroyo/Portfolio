@@ -274,9 +274,15 @@ function App() {
 
   useEffect(() => {
     if (isScreenVisible && messages.length === 0) {
-      setMessages([{ text: "Hello! My name is Charles, I am Software Engineer at Iowa State. Type in the chat a message you would like to send to me, and it will be forwarded to my email.", type: 'system' }]);
+      setMessages([{ 
+        text: "Hello! My name is Charles, I am Software Engineer at Iowa State. Type in the chat a message you would like to send to me, and it will be forwarded to my email.", 
+        type: 'system' 
+      }]);
     }
-  }, [isScreenVisible]);
+  }, [isScreenVisible, messages.length]);
+  
+
+  
 
   return (
 
